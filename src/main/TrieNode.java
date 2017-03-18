@@ -1,6 +1,7 @@
 package main;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 public class TrieNode {
@@ -71,14 +72,15 @@ public class TrieNode {
 	
 	public String search(String doc) {
 		StringBuilder resultBuilder = new StringBuilder();
+		HashSet<String> resultSet = new HashSet<String>();
 		int ndx = doc.indexOf(' ');
 		while (ndx != -1){
-			String r = singleSearch(doc);
+			String r = singleSearch(doc, resultSet);
 			resultBuilder.append(r);
 			doc = doc.substring(ndx + 1);
 			ndx = doc.indexOf(' ');
 		}
-		resultBuilder.append(singleSearch(doc));
+		resultBuilder.append(singleSearch(doc, resultSet));
 		try{
 			resultBuilder.deleteCharAt(resultBuilder.length() - 1);
 		} catch (StringIndexOutOfBoundsException e){
@@ -88,17 +90,21 @@ public class TrieNode {
 		return resultBuilder.length() > 0 ? resultBuilder.toString() : "-1";
 	}
 	
-	public String singleSearch(String doc){
+	public String singleSearch(String doc, HashSet<String> resultSet){
 		TrieNode node = this;
 		StringTokenizer st = new StringTokenizer(doc);
-		StringBuilder sb = new StringBuilder();
 		StringBuilder result = new StringBuilder();
+		String ngram = "";
 		while(st.hasMoreTokens()){
 			String token = st.nextToken();
 			node = node.kids.get(token);
 			if (node == null) break;
-			sb.append(token + " ");
-			if (node.isValid) result.append(sb.toString().trim() + "|");
+			ngram = ngram + " " + token;
+			ngram = ngram.trim();
+			if (node.isValid && !resultSet.contains(ngram)){ 
+				result.append(ngram + "|");
+				resultSet.add(ngram);
+			}
 		}
 		return result.toString();
 		

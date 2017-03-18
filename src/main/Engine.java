@@ -14,6 +14,7 @@ public class Engine {
 				root.addKid(line);		
 				line = br.readLine();
 			}
+			System.out.println("R");
 			line = br.readLine();
 			while(!(line == null)){
 				if (line.charAt(0) == 'Q'){
@@ -25,7 +26,7 @@ public class Engine {
 				} else if (line.charAt(0) == 'F') {
 					break;
 				} else {
-					System.err.println("wrong input format");
+					// System.err.println("wrong input format");
 					break;
 				}
 				line = br.readLine();
