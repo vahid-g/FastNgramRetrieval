@@ -3,5 +3,4 @@
 #DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 #python ${DIR}/reference_solution.py
 
-cd bin
-java -cp . main/Engine
+java -cp bin main/Engine -Xms 1G 
