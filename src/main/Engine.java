@@ -1,14 +1,11 @@
 package main;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.CharBuffer;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Engine {
 
@@ -22,9 +19,9 @@ public class Engine {
 				root.addKid(line);
 				line = br.readLine();
 			}
-			Path path = FileSystems.getDefault().getPath("small.result");
-			List<String> inputs = Files.readAllLines(path);
-			int i = 0;
+			// Path path = FileSystems.getDefault().getPath("small.result");
+			// List<String> inputs = Files.readAllLines(path);
+			// int i = 0;
 			System.out.println("R");
 			line = br.readLine();
 			StringBuilder sb = new StringBuilder();
@@ -32,12 +29,24 @@ public class Engine {
 				if (line == null || line.length() == 0) {
 					break;
 				} else if (line.charAt(0) == 'Q') {
+					String doc = line.substring(2);
+					List<Integer> spaceIndices = new ArrayList<Integer>();
+					int index = doc.indexOf(' ');
+					while (index != -1){
+						spaceIndices.add(index);
+						index = doc.indexOf(' ', index + 1);
+					}
+					String res = spaceIndices.parallelStream().map(
+							e -> root.singleSearch(doc.substring(e + 1))).flatMap(
+									f -> f.stream()).distinct().collect(Collectors.joining("|"));
+					sb.append(res);
+					sb.append("\n");
 					// System.out.println(root.search(line.substring(2)));
-					sb.append(inputs.get(i++) + "\n");
+					// sb.append(inputs.get(i++) + "\n");
 				} else if (line.charAt(0) == 'A') {
-					// root.addKid(line.substring(2));
+					root.addKid(line.substring(2));
 				} else if (line.charAt(0) == 'D') {
-					// root.removeKid(line.substring(2));
+					root.removeKid(line.substring(2));
 				} else if (line.charAt(0) == 'F') {
 					System.out.print(sb.toString());
 					sb = new StringBuilder();

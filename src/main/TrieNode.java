@@ -1,7 +1,9 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class TrieNode {
@@ -70,6 +72,10 @@ public class TrieNode {
 			node.isValid = false;
 	}
 	
+	public static String searchStat(String doc, TrieNode root) {
+		return root.search(doc);
+	}
+	
 	public String search(String doc) {
 		StringBuilder resultBuilder = new StringBuilder();
 		HashSet<String> resultSet = new HashSet<String>();
@@ -110,6 +116,25 @@ public class TrieNode {
 		
 	}
 	
+	public List<String> singleSearch(String doc){
+		List<String> resultList = new ArrayList<String>();
+		if (doc.charAt(0) == ' ' || doc.length() == 0) return resultList;
+		TrieNode node = this;
+		StringTokenizer st = new StringTokenizer(doc);
+		String ngram = "";
+		while(st.hasMoreTokens()){
+			String token = st.nextToken();
+			node = node.kids.get(token);
+			if (node == null) break;
+			ngram = ngram + " " + token;
+			ngram = ngram.trim();
+			if (node.isValid){ 
+				resultList.add(ngram);
+			}
+		}
+		return resultList;
+		
+	}
 	@Override
 	public String toString() {
 		String rep = "term: " + term + " " + isValid + "\n\t" + kids.toString();
