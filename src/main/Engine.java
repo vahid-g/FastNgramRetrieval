@@ -29,20 +29,28 @@ public class Engine {
 				if (line == null || line.length() == 0) {
 					break;
 				} else if (line.charAt(0) == 'Q') {
-					String doc = line.substring(2);
-					List<Integer> spaceIndices = new ArrayList<Integer>();
-					int index = doc.indexOf(' ');
-					while (index != -1){
-						spaceIndices.add(index);
-						index = doc.indexOf(' ', index + 1);
-					}
-					String res = spaceIndices.parallelStream().map(
-							e -> root.singleSearch(doc.substring(e + 1))).flatMap(
-									f -> f.stream()).distinct().collect(Collectors.joining("|"));
-					sb.append(res);
-					sb.append("\n");
 					// System.out.println(root.search(line.substring(2)));
-					// sb.append(inputs.get(i++) + "\n");
+//					 sb.append(root.search(line.substring(2)) + "\n");
+					String doc = line.substring(2);
+					ArrayList<Integer> spaceIndices = new ArrayList<Integer>();
+					spaceIndices.add(-1);
+//					int index = doc.indexOf(' ');
+//					while (index != -1) {
+//						spaceIndices.add(index);
+//						index = doc.indexOf(' ', index + 1);
+//					}
+					spaceIndices.add(doc.indexOf(' ', doc.length() / 2));
+					
+					String res = spaceIndices.parallelStream()
+							.map(e -> root.searchAsList(doc.substring(e + 1)))
+							.flatMap(f -> f.stream()).distinct()
+							.collect(Collectors.joining("|"));
+					if (res.isEmpty())
+						sb.append("-1");
+					else
+						sb.append(res);
+					sb.append("\n");
+					
 				} else if (line.charAt(0) == 'A') {
 					root.addKid(line.substring(2));
 				} else if (line.charAt(0) == 'D') {

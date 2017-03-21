@@ -72,9 +72,6 @@ public class TrieNode {
 			node.isValid = false;
 	}
 	
-	public static String searchStat(String doc, TrieNode root) {
-		return root.search(doc);
-	}
 	
 	public String search(String doc) {
 		StringBuilder resultBuilder = new StringBuilder();
@@ -94,6 +91,21 @@ public class TrieNode {
 		}
 		
 		return resultBuilder.length() > 0 ? resultBuilder.toString() : "-1";
+	}
+	
+	public ArrayList<String> searchAsList(String doc) {
+		ArrayList<String> results = new ArrayList<String>();
+		int ndx = doc.indexOf(' ');
+		while (ndx != -1){
+			ArrayList<String> r = singleSearch(doc);
+			r.removeAll(results);
+			results.addAll(r);
+			doc = doc.substring(ndx + 1);
+			ndx = doc.indexOf(' ');
+		}
+		ArrayList<String> r = singleSearch(doc);
+		results.addAll(r);
+		return results;
 	}
 	
 	public String singleSearch(String doc, HashSet<String> resultSet){
@@ -116,9 +128,10 @@ public class TrieNode {
 		
 	}
 	
-	public List<String> singleSearch(String doc){
-		List<String> resultList = new ArrayList<String>();
-		if (doc.charAt(0) == ' ' || doc.length() == 0) return resultList;
+	public ArrayList<String> singleSearch(String doc){
+		ArrayList<String> resultList = new ArrayList<String>();
+		if (doc.length() == 0) return resultList;
+		if (doc.charAt(0) == ' ') return resultList;
 		TrieNode node = this;
 		StringTokenizer st = new StringTokenizer(doc);
 		String ngram = "";
